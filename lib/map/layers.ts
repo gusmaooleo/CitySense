@@ -18,8 +18,8 @@ export const MapLayers: GeoLayer[] = [
     url: "https://geo.salvador.ba.gov.br/arcgis/services/Hosted/dec_32791_20_bairros_a/MapServer/WFSServer?SERVICE=WFS&REQUEST=GetFeature&VERSION=2.0.0&TYPENAMES=dec_32791_20_bairros_a:dec_32791_20_bairros_a&OUTPUTFORMAT=GEOJSON&SRSNAME=EPSG:31984&STARTINDEX=0&COUNT=3000",
     source: new VectorSource(),
     style: new Style({
-      stroke: new Stroke({ color: "rgba(255, 235, 55, 1)", width: 1 }),
-      fill: new Fill({ color: "rgba(55, 255, 115, 0.3)" }),
+      stroke: new Stroke({ color: "rgba(59, 59, 59, 1)", width: 1 }),
+      fill: new Fill({ color: "rgba(176, 255, 130, 0.3)" }),
     }),
   },
   {

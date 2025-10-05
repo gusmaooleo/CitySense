@@ -12,19 +12,19 @@ import Image from "next/image";
 
 const items = [
   {
-    title: "Camadas",
+    title: "Layers",
     icon: Layers,
   },
   {
-    title: "Alertas",
+    title: "Alerts",
     icon: TriangleAlert,
   },
   {
-    title: "Inteligência",
+    title: "Smart",
     icon: BrainCircuit,
   },
   {
-    title: "Configurações",
+    title: "Settings",
     icon: Settings,
   },
 ];

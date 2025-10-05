@@ -5,16 +5,76 @@ import VectorLayer from "ol/layer/Vector";
 import OSM from "ol/source/OSM";
 import VectorSource from "ol/source/Vector";
 import XYZ from "ol/source/XYZ";
-import { Style, Text } from "ol/style";
+import { Fill, Icon, Stroke, Style, Text } from "ol/style";
 import { GeoLayer } from "./layers";
 import { WMTS } from "ol/source";
 import WMTSCapabilities from "ol/format/WMTSCapabilities";
 import { optionsFromCapabilities } from "ol/source/WMTS";
+import Layer from "ol/layer/Layer";
+import { riskAlerts } from "./fakeAlerts";
+import Feature from "ol/Feature";
+import Point from "ol/geom/Point";
+import { fromLonLat } from "ol/proj";
+import { MapLayers } from "@/lib/map/layers";
 
 class MapService {
   private layers: { [key: string]: VectorLayer<VectorSource> } = {};
   private baseLayer: TileLayer<OSM> | null = null;
   private map: Map | null = null;
+
+  async addIconAlerts() {
+    const alertFeatures = riskAlerts.map((a) => {
+      const feature = new Feature({
+        geometry: new Point(fromLonLat(a.coordinates)),
+        id: a.id,
+        name: a.name,
+        idesh: a.idesh,
+        area: a.areaHa,
+        severity: a.severity,
+        alertType: a.alertType,
+      });
+
+      feature.setStyle(
+        new Style({
+          image: new Icon({
+            src:
+              a.severity === "muito_grave"
+                ? "/red-alert.svg"
+                : "/orange-alert.svg",
+            scale: 0.4,
+            anchor: [0.5, 1],
+          }),
+          text: new Text({
+            text: `${a.name} - ${a.alertType}`,
+            offsetY: 20,
+            textAlign: "center",
+            font: "bold 11px 'Open Sans', sans-serif",
+            fill: new Fill({
+              color: "#000",
+            }),
+            stroke: new Stroke({
+              color: "#fff",
+              width: 1,
+            }),
+          }),
+        })
+      );
+      return feature;
+    });
+
+    const source = new VectorSource({ features: alertFeatures });
+
+    source.forEachFeature((f) => {
+      f.setId(f.getProperties()["id"]);
+    });
+
+    const alertsLayer = new VectorLayer({
+      source,
+    });
+
+    this.layers["Alertas"] = alertsLayer;
+    this.addMapLayer(alertsLayer);
+  }
 
   async initialize(container: HTMLDivElement) {
     this.baseLayer = new TileLayer({
@@ -44,6 +104,12 @@ class MapService {
       "Landsat_Global_Man-made_Impervious_Surface",
       0.4
     );
+
+    for (const layer of MapLayers) {
+      await this.loadGeoJSONLayer(layer);
+    }
+
+    await this.addIconAlerts();
   }
 
   async addWMTSTileLayer(
@@ -69,8 +135,7 @@ class MapService {
       if (wmtsUrl.includes("nasa.gov")) {
         layerIdentifier = identifier || result.Contents.Layers[0].Identifier;
         matrixSetIdentifier = result.Contents.TileMatrixSet[0].Identifier;
-      }
-      else {
+      } else {
         layerIdentifier = identifier || result.Contents.Layer[0].Identifier;
         matrixSetIdentifier = result.Contents.TileMatrixSet[0].Identifier;
       }
@@ -169,6 +234,13 @@ class MapService {
     }
   }
 
+  getFeaturesByLayer(layerName: string) {
+    const layer = this.layers[layerName];
+    if (!layer) return [];
+    const source = layer.getSource();
+    return source ? source.getFeatures() : [];
+  }
+
   showLayer(layerId: string) {
     const layer = this.layers[layerId];
     if (layer) {
@@ -242,6 +314,9 @@ class MapService {
     console.warn(`Feature com ID ${featureId} não encontrada`);
   }
 
+  addMapLayer(layer: Layer) {
+    this.map?.addLayer(layer);
+  }
 
   getRawLayers() {
     return this.layers;

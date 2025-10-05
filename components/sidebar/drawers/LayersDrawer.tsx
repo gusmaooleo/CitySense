@@ -54,7 +54,7 @@ export default function LayersDrawer() {
         {visible ? <Eye /> : <EyeClosed />}
       </button>
       <h1 className="font-semibold text-background mb-3">
-        Configurações e gerenciamento de camadas do mapa
+        Settings and map layers management
       </h1>
 
       <div className="flex flex-row gap-2">
@@ -64,7 +64,7 @@ export default function LayersDrawer() {
             size={18}
           />
           <Input
-            placeholder="Buscar bairro..."
+            placeholder="Search for a neighborhood..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             className="w-full border border-(--muted-foreground)/40 rounded-md pl-9 pr-9 py-2 text-(--darkgray) placeholder-(--darkgray) outline-none focus:border-(--lightblue) duration-150"
@@ -85,12 +85,12 @@ export default function LayersDrawer() {
           }
         >
           <SelectTrigger className="w-[180px] bg-background">
-            <SelectValue placeholder="Selecione uma camada" />
+            <SelectValue placeholder="Select a layer" />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="Todos">Todos</SelectItem>
-            <SelectItem value="Bairros">Bairro</SelectItem>
-            <SelectItem value="Áreas de risco">Área de risco</SelectItem>
+            <SelectItem value="Todos">All</SelectItem>
+            <SelectItem value="Bairros">Neighborhood's</SelectItem>
+            <SelectItem value="Áreas de risco">Risk Area</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -98,7 +98,7 @@ export default function LayersDrawer() {
       <div className="flex flex-col grow-1 overflow-y-auto pr-2 gap-2">
         {filtered.length === 0 ? (
           <p className="text-(--muted-foreground) text-sm italic px-2">
-            Nenhum bairro encontrado.
+            Any neighborhood found.
           </p>
         ) : (
           filtered.map((f) => {
@@ -131,7 +131,7 @@ export default function LayersDrawer() {
                   <div className="flex flex-row gap-2">
                     {property["INSTITUIDO"] && (
                       <p className="text-sm text-(--muted-foreground)">
-                        Instituído: {property["INSTITUIDO"]}
+                        Instituted: {property["INSTITUIDO"]}
                       </p>
                     )}
                     {property["IDESH"] && (
@@ -141,7 +141,7 @@ export default function LayersDrawer() {
                     )}
                     {property["area_ha"] && (
                       <p className="text-sm text-(--muted-foreground)">
-                        Área (HA): {property["area_ha"]}
+                        Area (HA): {property["area_ha"]}
                       </p>
                     )}
                   </div>

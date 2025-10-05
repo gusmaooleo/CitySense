@@ -5,12 +5,21 @@ import { ArrowLeft } from "lucide-react";
 import { useState } from "react";
 import LayersDrawer from "./drawers/LayersDrawer";
 import AppSidebar from "./Sidebar";
+import AlertDrawer from "./drawers/AlertDrawer";
 
 const drawerContent = {
-  Camadas: <LayersDrawer />,
-  Alertas: <p>Alertas de risco e eventos ativos</p>,
-  Inteligência: <p>Inferências automáticas e IA ambiental</p>,
-  Configurações: <p>Preferências e integrações</p>,
+  Layers: <LayersDrawer />,
+  Alerts: <AlertDrawer />,
+  Smart: (
+    <h1 className="font-semibold text-background mb-3">
+      AI and automatic detections
+    </h1>
+  ),
+  Settings: (
+    <h1 className="font-semibold text-background mb-3">
+      Global settings
+    </h1>
+  ),
 };
 
 export default function AppDrawer() {
